@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Главная страница
+BestRoutes
 {%  endblock %}
 
 {% block body %}
-<h1>Главная страница</h1>
+    <div class="container">
+        <form method="post">
+            <input type="text" class="form-control" placeholder="Откуда">
+            <input type="text" class="form-control" placeholder="Куда">
+        </form>
+    </div>
 {% endblock %}
