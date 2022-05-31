@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
 
 {% block title %}
-BestRoutes
+BestRoutes - вход выполнен
 {%  endblock %}
 
+{% block auth_btns %}
+    <a href="/index/track" class="btn btn-outline-info me-2">Отслеживание маршрутов</a>
+    <a href="/index/logout" class="btn btn-outline-danger me-2">Выход</a>
+{% endblock %}
+
 {% block body %}
-    <div class="container">
-        <form method="post">
-            <input type="text" name="from" class="form-control" placeholder="Откуда">
-            <input type="text" name="to" class="form-control" placeholder="Куда">
-            <input type=""
-            <input type="submit" class="btn btn-success" value="Искать">
-        </form>
-    </div>
+
 {% endblock %}
