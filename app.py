@@ -4,8 +4,9 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+import datetime
 import locale
+import random
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ login_url = "https://best-routes.herokuapp.com/user/login"
 logout_url = "https://best-routes.herokuapp.com/user/quit"
 get_all_routes = "https://best-routes.herokuapp.com/routes/avia"
 track_routes_url = "https://best-routes.herokuapp.com/user/track/avia"
-
+track_trips_url = "https://best-routes.herokuapp.com/user/track/avia/trip"
 
 @app.route('/', methods=['GET', 'POST'])
 def home_page():
@@ -32,7 +33,7 @@ def home_page():
             serviceClass = "Y"
         else:
             serviceClass = "C"
-        count = 10
+        count = -1
         search_params = {
             'departureCode': departureCode,
             'arrivalCode': arrivalCode,
@@ -65,15 +66,30 @@ def track():
         response_dict = get_routes()
         return render_template('index.html', routes=response_dict)
     else:
-        pass
-    headers = {
-        'Token': session['token']
-    }
+        headers = {
+            'Token': session['token']
+        }
 
-    response = requests.request("GET", track_routes_url, headers=headers)
+        track_response = requests.request("GET", track_routes_url, headers=headers)
+        track_response_dict = track_response.json().get('result')
+        print(track_response_dict)
+        return render_template('track.html', routes=track_response_dict)
 
-    print(response.text)
-    return render_template('track.html')
+
+@app.route('/account/track/trips', methods=['GET', 'POST'])
+def track_trips():
+    if request.method == 'POST':
+        response_dict = get_routes()
+        return render_template('index.html', routes=response_dict)
+    else:
+        headers = {
+            'Token': session['token']
+        }
+
+        track_tris_response = requests.request("GET", track_trips_url, headers=headers)
+        track_response_dict = track_tris_response.json().get('result')
+        print(track_response_dict)
+        return render_template('trips.html', routes=track_response_dict)
 
 
 @app.route('/account/logout')
@@ -103,7 +119,7 @@ def auth_page():
         if response.json()['status'] == "OK":
             session['token'] = str(response.json()['token'])
             print(session['token'])
-            return redirect('/index')
+            return redirect('/account')
         else:
             return render_template('auth.html')
     else:
@@ -124,16 +140,13 @@ def register_page():
         if response.json()['status'] == "OK":
             session['token'] = str(response.json()['token'])
             print(session['token'])
-            return redirect('/index')
+            return redirect('/account')
         else:
             render_template('register.html')
     else:
         return render_template('register.html')
 
 
-# @app.route('/user/<string:email>', methods=['GET', 'POST'])
-# def user_page():
-#     return render_template('user.html')
 def get_routes():
     departureCode = request.form.get('departureCode')
     arrivalCode = request.form.get('arrivalCode')
@@ -145,7 +158,7 @@ def get_routes():
         serviceClass = "Y"
     else:
         serviceClass = "C"
-    count = 10
+    count = -1
     search_params = {
         'departureCode': departureCode,
         'arrivalCode': arrivalCode,
@@ -161,7 +174,9 @@ def get_routes():
 
     track_params = {
         'departureCode': departureCode,
+        'departure': "Город",
         'arrivalCode': arrivalCode,
+        'arrival': "Город",
         'departureDate': departureDate,
         'adult': adult,
         'child': child,
@@ -169,16 +184,36 @@ def get_routes():
         'serviceClass': serviceClass,
         'baseMinCost': response_dict[0]['minPrice']
     }
+
+    date_1 = datetime.datetime.strptime(departureDate, "%Y-%m-%d")
+    date_2 = date_1 + datetime.timedelta(days=random.randint(1, 90))
+
+    track_trips_params = {
+        'departureCode': departureCode,
+        'departure': "Город",
+        'arrivalCode': arrivalCode,
+        'arrival': "Город",
+        'departureDate1': departureDate,
+        'departureDate2': str(date_2.date()),
+        'adult': adult,
+        'child': child,
+        'infant': infant,
+        'serviceClass': serviceClass,
+        'baseMinCost1': response_dict[0]['minPrice'],
+        'baseMinCost2': response_dict[0]['minPrice']
+    }
     headers = {
         'Token': session['token']
     }
     track_response = requests.request("POST", track_routes_url, headers=headers, params=track_params)
+    track_trip_response = requests.request("POST", track_trips_url, headers=headers, params=track_trips_params)
     print(track_response.text)
+    print(track_trip_response.text)
     return response_dict
 
 
 def date_m(date):
-    formatted_date = datetime.fromisoformat(date)
+    formatted_date = datetime.datetime.fromisoformat(date)
 
     return str(formatted_date)
 

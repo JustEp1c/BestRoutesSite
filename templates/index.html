@@ -5,10 +5,22 @@ BestRoutes - вход выполнен
 {%  endblock %}
 
 {% block auth_btns %}
-    <a href="/index/track" class="btn btn-outline-info me-2">Отслеживание маршрутов</a>
-    <a href="/index/logout" class="btn btn-outline-danger me-2">Выход</a>
+    <a href="/account/track" class="btn btn-outline-info me-2">Отслеживание маршрутов</a>
+    <a href="/account/track/trips" class="btn btn-outline-warning me-2">Авиапутешествия</a>
+    <a href="/account/logout" class="btn btn-outline-danger me-2">Выход</a>
 {% endblock %}
 
 {% block body %}
-
+{% for route in routes %}
+    <div class="card container">
+  <div class="card-header ">
+      {{ route['source'] }}
+  </div>
+  <div class="card-body ">
+    <h5 class="card-title justify-content-center ">{{ route['departure'] }} -> {{ route['arrival'] }}</h5>
+    <p class="card-text ">{{ route['departureDateTime'] }} -> {{ route['arrivalDateTime'] }}</p>
+    <a href="{{ route['url'] }}" class="btn btn-primary " target="_blank">Купить билет</a>
+  </div>
+</div>
+    {% endfor %}
 {% endblock %}

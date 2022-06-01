@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+
+{% block body %}
+{% for route in routes %}
+    <div class="card container">
+  <div class="card-header ">
+      {{ route['back']['arrival'] }} {{ route['back']['arrivalCode'] }} <-> {{ route['back']['departure'] }} {{ route['back']['departureCode'] }}
+  </div>
+  <div class="card-body ">
+    <h5 class="card-title justify-content-center ">Туда: Цена - {{ route['to']['directionMinCost'] }} рублей Дата отправления:
+        {{ route['to']['departureDate'] }} {% if route['to']['serviceClass'] == 'Y' %} Эконом {% else %} Бизнес {% endif %}- класс</h5>
+    <p class="card-text ">Взрослый: {{ route['to']['adult'] }} Ребенок: {{ route['to']['child'] }} Младенец: {{ route['to']['infant'] }}</p>
+  <h5 class="card-title justify-content-center ">Обратно: Цена - {{ route['back']['directionMinCost'] }} рублей Дата возвращения:
+        {{ route['back']['departureDate'] }} {% if route['back']['serviceClass'] == 'Y' %} Эконом {% else %} Бизнес {% endif %}- класс</h5>
+    <p class="card-text ">Взрослый: {{ route['back']['adult'] }} Ребенок: {{ route['back']['child'] }} Младенец: {{ route['back']['infant'] }}</p>
+  <h5 class="card-title justify-content-center ">Общая цена: {{ route['tripMinCost'] }} рублей</h5>
+    <a href="#" class="btn btn-outline-danger" target="_blank">Удалить маршрут</a>
+  </div>
+</div>
+    {% endfor %}
+{% endblock %}

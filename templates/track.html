@@ -1,1 +1,17 @@
 {% extends 'index.html' %}
+
+{% block body %}
+{% for route in routes %}
+    <div class="card container">
+  <div class="card-header ">
+      {{ route['departure'] }} {{ route['departureCode'] }} -> {{ route['arrival'] }} {{ route['arrivalCode'] }}
+  </div>
+  <div class="card-body ">
+    <h5 class="card-title justify-content-center ">Актуальная цена на данный момент: {{ route['directionMinCost'] }} рублей Дата отправления:
+        {{ route['departureDate'] }} {% if route['serviceClass'] == 'Y' %} Эконом {% else %} Бизнес {% endif %}- класс</h5>
+    <p class="card-text ">Взрослый: {{ route['adult'] }} Ребенок: {{ route['child'] }} Младенец: {{ route['infant'] }}</p>
+    <a href="#" class="btn btn-outline-danger" target="_blank">Удалить маршрут</a>
+  </div>
+</div>
+    {% endfor %}
+{% endblock %}
