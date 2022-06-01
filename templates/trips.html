@@ -14,7 +14,7 @@
         {{ route['back']['departureDate'] }} {% if route['back']['serviceClass'] == 'Y' %} Эконом {% else %} Бизнес {% endif %}- класс</h5>
     <p class="card-text ">Взрослый: {{ route['back']['adult'] }} Ребенок: {{ route['back']['child'] }} Младенец: {{ route['back']['infant'] }}</p>
   <h5 class="card-title justify-content-center ">Общая цена: {{ route['tripMinCost'] }} рублей</h5>
-    <a href="#" class="btn btn-outline-danger" target="_blank">Удалить маршрут</a>
+    <a href="/account/track/trips/delete/{{ route['id'] }}" class="btn btn-outline-danger" target="_blank">Удалить путешествие</a>
   </div>
 </div>
     {% endfor %}

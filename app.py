@@ -20,6 +20,7 @@ get_all_routes = "https://best-routes.herokuapp.com/routes/avia"
 track_routes_url = "https://best-routes.herokuapp.com/user/track/avia"
 track_trips_url = "https://best-routes.herokuapp.com/user/track/avia/trip"
 
+
 @app.route('/', methods=['GET', 'POST'])
 def home_page():
     if request.method == "POST":
@@ -46,7 +47,8 @@ def home_page():
         }
         response = requests.request("GET", get_all_routes, params=search_params)
         response_dict = response.json().get('result')
-        return render_template('base.html', routes=response_dict)
+
+        return render_template('base.html', routes=response_dict, length=len(response_dict))
     else:
         return render_template('base.html')
 
@@ -55,7 +57,7 @@ def home_page():
 def index_page():
     if request.method == "POST":
         response_dict = get_routes()
-        return render_template('index.html', routes=response_dict)
+        return render_template('index.html', routes=response_dict, length=len(response_dict))
     else:
         return render_template('index.html')
 
@@ -64,7 +66,7 @@ def index_page():
 def track():
     if request.method == 'POST':
         response_dict = get_routes()
-        return render_template('index.html', routes=response_dict)
+        return render_template('index.html', routes=response_dict, length=len(response_dict))
     else:
         headers = {
             'Token': session['token']
@@ -72,15 +74,28 @@ def track():
 
         track_response = requests.request("GET", track_routes_url, headers=headers)
         track_response_dict = track_response.json().get('result')
-        print(track_response_dict)
         return render_template('track.html', routes=track_response_dict)
+
+
+@app.route('/account/track/delete/<int:route_id>', methods=['GET', 'POST'])
+def delete_routes(route_id):
+    delete_route_url = "https://best-routes.herokuapp.com/user/track/avia/" + str(route_id)
+    headers = {
+        'Token': session['token']
+    }
+
+    response = requests.request("DELETE", delete_route_url, headers=headers)
+
+    print(response.text)
+
+    return redirect(url_for('track'))
 
 
 @app.route('/account/track/trips', methods=['GET', 'POST'])
 def track_trips():
     if request.method == 'POST':
         response_dict = get_routes()
-        return render_template('index.html', routes=response_dict)
+        return render_template('index.html', routes=response_dict, length=len(response_dict))
     else:
         headers = {
             'Token': session['token']
@@ -90,6 +105,19 @@ def track_trips():
         track_response_dict = track_tris_response.json().get('result')
         print(track_response_dict)
         return render_template('trips.html', routes=track_response_dict)
+
+
+@app.route('/account/track/trips/delete/<int:trip_id>', methods=['POST', 'GET'])
+def delete_trip(trip_id):
+    delete_trip_url = "https://best-routes.herokuapp.com/user/track/avia/trip/" + str(trip_id)
+    headers = {
+        'Token': session['token']
+    }
+
+    response = requests.request("DELETE", delete_trip_url, headers=headers)
+
+    print(response.text)
+    return redirect(url_for('track_trips'))
 
 
 @app.route('/account/logout')
@@ -210,6 +238,7 @@ def get_routes():
     print(track_response.text)
     print(track_trip_response.text)
     return response_dict
+
 
 
 def date_m(date):

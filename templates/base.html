@@ -55,18 +55,22 @@
         </form>
 </div>
 {% block body %}
-    {% for route in routes %}
-    <div class="card container">
-  <div class="card-header ">
-      {{ route['source'] }}
-  </div>
-  <div class="card-body ">
-    <h5 class="card-title justify-content-center ">{{ route['departure'] }} -> {{ route['arrival'] }}</h5>
-    <p class="card-text ">{{ route['departureDateTime'] }} -> {{ route['arrivalDateTime'] }}</p>
-    <a href="{{ route['url'] }}" class="btn btn-primary " target="_blank">Купить билет</a>
-  </div>
-</div>
-    {% endfor %}
+    {% if length != 0 %}
+        {% for route in routes %}
+            <div class="card container">
+          <div class="card-header ">
+              {{ route['source'] }}
+          </div>
+          <div class="card-body ">
+            <h5 class="card-title justify-content-center ">{{ route['departure'] }} -> {{ route['arrival'] }}</h5>
+            <p class="card-text ">{{ route['departureDateTime'] }} -> {{ route['arrivalDateTime'] }}</p>
+            <a href="{{ route['url'] }}" class="btn btn-primary " target="_blank">Купить билет</a>
+          </div>
+            </div>
+        {% endfor %}
+    {% else %}
+    <h2 class="container justify-content-center">Таких маршрутов не нашлось :(</h2>
+    {% endif %}
 {% endblock %}
 <div class="container">
   <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
@@ -81,7 +85,7 @@
           <a href="https://t.me/best_routest_bot" class="nav-link px-2">Попробуйте нашего бота!</a>
       </li>
         <li class="nav-item">
-            <a href="https://t.me/best_routest_bot"><img class="airplane" src="/static/images/telegram.png" alt="Telegram" width="40" href="#"></a>
+            <a href="https://t.me/best_routest_bot" target="_blank"><img class="airplane" src="/static/images/telegram.png" alt="Telegram" width="40"></a>
         </li>
     </ul>
   </footer>

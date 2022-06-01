@@ -11,16 +11,20 @@ BestRoutes - вход выполнен
 {% endblock %}
 
 {% block body %}
-{% for route in routes %}
-    <div class="card container">
-  <div class="card-header ">
-      {{ route['source'] }}
-  </div>
-  <div class="card-body ">
-    <h5 class="card-title justify-content-center ">{{ route['departure'] }} -> {{ route['arrival'] }}</h5>
-    <p class="card-text ">{{ route['departureDateTime'] }} -> {{ route['arrivalDateTime'] }}</p>
-    <a href="{{ route['url'] }}" class="btn btn-primary " target="_blank">Купить билет</a>
-  </div>
-</div>
-    {% endfor %}
+    {% if length != 0 %}
+        {% for route in routes %}
+            <div class="card container">
+            <div class="card-header ">
+              {{ route['source'] }}
+            </div>
+            <div class="card-body ">
+            <h5 class="card-title justify-content-center ">{{ route['departure'] }} -> {{ route['arrival'] }}</h5>
+            <p class="card-text ">{{ route['departureDateTime'] }} -> {{ route['arrivalDateTime'] }}</p>
+            <a href="{{ route['url'] }}" class="btn btn-primary " target="_blank">Купить билет</a>
+            </div>
+            </div>
+        {% endfor %}
+    {% else %}
+    <h2 class="container justify-content-center">Таких маршрутов не нашлось :(</h2>
+    {% endif %}
 {% endblock %}
